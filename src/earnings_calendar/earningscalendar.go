@@ -1,4 +1,4 @@
-package main
+package main // temporary main
 
 import (
 	"encoding/json"
