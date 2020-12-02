@@ -8,6 +8,11 @@ import (
 	"strings"
 )
 
+type security struct {
+	ticker      string
+	companyname string
+}
+
 func getJSONResponse(response string) string {
 	var responseslice []string
 	responselist := strings.Split(response, "\n")
@@ -40,5 +45,17 @@ func main() {
 	json.Unmarshal([]byte(getJSONResponse(responseString)), &result)
 
 	rows := result["context"].(map[string]interface{})["dispatcher"].(map[string]interface{})["stores"].(map[string]interface{})["ScreenerResultsStore"].(map[string]interface{})["results"].(map[string]interface{})["rows"]
-	fmt.Println(rows)
+	rowslist := rows.([]interface{})
+	var securities []security
+	for _, value := range rowslist {
+
+		ticker := value.(map[string]interface{})["ticker"]
+		companyname := value.(map[string]interface{})["companyshortname"]
+		newsecurity := security{fmt.Sprint(ticker), fmt.Sprint(companyname)}
+		securities = append(securities, newsecurity)
+
+	}
+
+	fmt.Println(securities) // ToDo: change func name from name and return this
+
 }
