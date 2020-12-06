@@ -13,7 +13,7 @@ var basecalendar string = "https://finance.yahoo.com/calendar/earnings?from=2020
 
 // Security contains metadata about a company's listing
 type Security struct {
-	ticker                string
+	Ticker                string
 	companyname           string
 	latestReportTimestamp string
 	latestReportTitle     string
@@ -60,9 +60,9 @@ func GetTodaysReporters() []Security {
 
 	for _, value := range rowslist {
 
-		ticker := value.(map[string]interface{})["ticker"]
+		Ticker := value.(map[string]interface{})["ticker"]
 		companyname := value.(map[string]interface{})["companyshortname"]
-		newsecurity := Security{ticker: fmt.Sprint(ticker), companyname: fmt.Sprint(companyname)}
+		newsecurity := Security{Ticker: fmt.Sprint(Ticker), companyname: fmt.Sprint(companyname)}
 		securities = append(securities, newsecurity)
 
 	}

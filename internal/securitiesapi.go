@@ -4,17 +4,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 )
 
-var polygonAPIKey string = "apiKey=cqvrOEHpOWFMUKh7iIogOGA9rV53dVmp"
-
 // FetchPolygon fills out security attrs from polygon API
 func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGroup) {
+	//fmt.Println("FIRST:", security.Ticker)
+	polygonAPIKey := os.Getenv("POLYGONAPIKEY")
+	if polygonAPIKey == "" {
+		log.Fatal("ERROR: you must set the environment variable POLYGONAPIKEY before running this program")
+	}
+
 	defer wg.Done()
-	polygonHTTPURLSlice := []string{"https://api.polygon.io/v1/meta/symbols/", security.ticker, "/news?perpage=50&page=1&", polygonAPIKey}
+	polygonHTTPURLSlice := []string{"https://api.polygon.io/v1/meta/symbols/", security.Ticker, "/news?perpage=1&page=1&apiKey=", polygonAPIKey}
 	polygonHTTPURL := strings.Join(polygonHTTPURLSlice, "")
 	response, err := http.Get(polygonHTTPURL)
 	if err != nil {
@@ -39,6 +45,7 @@ func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGrou
 		ch <- secIdx
 		return
 	}
+
 	latestResult := result[0]
 	security.latestReportTimestamp = fmt.Sprint(latestResult["timestamp"])
 	security.latestReportTitle = fmt.Sprint(latestResult["title"])
