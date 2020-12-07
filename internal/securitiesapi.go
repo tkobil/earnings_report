@@ -14,7 +14,7 @@ var polygonAPIKey string = "apiKey=cqvrOEHpOWFMUKh7iIogOGA9rV53dVmp"
 // FetchPolygon fills out security attrs from polygon API
 func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	polygonHTTPURLSlice := []string{"https://api.polygon.io/v1/meta/symbols/", security.ticker, "/news?perpage=50&page=1&", polygonAPIKey}
+	polygonHTTPURLSlice := []string{"https://api.polygon.io/v1/meta/symbols/", security.Ticker, "/news?perpage=50&page=1&", polygonAPIKey}
 	polygonHTTPURL := strings.Join(polygonHTTPURLSlice, "")
 	response, err := http.Get(polygonHTTPURL)
 	if err != nil {
@@ -35,6 +35,7 @@ func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGrou
 	responseString := string(responseData)
 	json.Unmarshal([]byte(responseString), &result)
 	if len(result) <= 0 {
+		fmt.Println(security.Ticker)
 		fmt.Println("No Results") //Change to logging
 		ch <- secIdx
 		return

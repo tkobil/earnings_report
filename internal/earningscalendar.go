@@ -11,16 +11,6 @@ import (
 //var basecalendar string = "https://finance.yahoo.com/calendar/earnings/" //Generates today's calendar
 var basecalendar string = "https://finance.yahoo.com/calendar/earnings?from=2020-11-29&to=2020-12-05&day=2020-11-30" //If you need to override day
 
-// Security contains metadata about a company's listing
-type Security struct {
-	ticker                string
-	companyname           string
-	latestReportTimestamp string
-	latestReportTitle     string
-	latestReportURL       string
-	latestReportSource    string
-}
-
 func getJSONResponse(response string) string {
 	var responseslice []string
 	responselist := strings.Split(response, "\n")
@@ -62,7 +52,7 @@ func GetTodaysReporters() []Security {
 
 		ticker := value.(map[string]interface{})["ticker"]
 		companyname := value.(map[string]interface{})["companyshortname"]
-		newsecurity := Security{ticker: fmt.Sprint(ticker), companyname: fmt.Sprint(companyname)}
+		newsecurity := Security{Ticker: fmt.Sprint(ticker), companyname: fmt.Sprint(companyname)}
 		securities = append(securities, newsecurity)
 
 	}
