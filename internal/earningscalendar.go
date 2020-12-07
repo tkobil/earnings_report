@@ -50,9 +50,9 @@ func GetTodaysReporters() []Security {
 
 	for _, value := range rowslist {
 
-		ticker := value.(map[string]interface{})["ticker"]
+		Ticker := value.(map[string]interface{})["ticker"]
 		companyname := value.(map[string]interface{})["companyshortname"]
-		newsecurity := Security{Ticker: fmt.Sprint(ticker), companyname: fmt.Sprint(companyname)}
+		newsecurity := Security{Ticker: fmt.Sprint(Ticker), companyname: fmt.Sprint(companyname)}
 		securities = append(securities, newsecurity)
 
 	}
