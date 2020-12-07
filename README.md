@@ -1,2 +1,2 @@
 # earnings_report
-Twitter/Email Bot for Company Earnings Reports
+Twitter/Email Bot for Company Earnings Reports using Go
