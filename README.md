@@ -1,2 +1,2 @@
 # earnings_report
-Reports Past Earnings-Day Performance of Companies Reporting Earnings 
+Twitter/Email Bot for Company Earnings Reports
