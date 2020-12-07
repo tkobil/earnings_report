@@ -41,6 +41,7 @@ func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGrou
 	responseString := string(responseData)
 	json.Unmarshal([]byte(responseString), &result)
 	if len(result) <= 0 {
+		fmt.Println(security.Ticker)
 		fmt.Println("No Results") //Change to logging
 		ch <- secIdx
 		return
