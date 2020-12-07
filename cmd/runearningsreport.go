@@ -31,11 +31,9 @@ func main() {
 		switch secIdx, ok := <-ch; ok {
 		case true:
 			//make tweet
-			//runtime.Breakpoint()
 			str := securities[secIdx].SplitByLengthThreshold(300)
 			fmt.Println(str)
 		case false:
-			fmt.Println("No Mo")
 			return
 		}
 
