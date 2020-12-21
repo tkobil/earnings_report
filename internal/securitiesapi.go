@@ -50,7 +50,7 @@ func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGrou
 	latestResult := result[0]
 	security.latestReportTimestamp = fmt.Sprint(latestResult["timestamp"])
 	security.latestReportTitle = fmt.Sprint(latestResult["title"])
-	security.latestReportURL = fmt.Sprint(latestResult["url"])
+	security.latestURLInfo = fmt.Sprintf("Latest Report: %s", latestResult["url"])
 	security.latestReportSource = fmt.Sprint(latestResult["source"])
 	ch <- secIdx
 	return

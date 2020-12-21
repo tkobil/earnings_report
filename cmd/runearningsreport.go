@@ -1,7 +1,6 @@
 package main // temporary main
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
@@ -27,13 +26,11 @@ func main() {
 	ch := make(chan int)
 	securities := internal.GetTodaysReporters()
 	go gatherSecurityInfo(securities, ch)
-
 	for {
 		switch secIdx, ok := <-ch; ok {
 		case true:
-			//make tweet
-			secstr := securities[secIdx].SplitByLengthThreshold(300)
-			fmt.Println(secstr[0])
+			secstr := securities[secIdx].SplitByLengthThreshold(300) //300 is default max length of tweet
+			go internal.SendTweets(secstr)
 		case false:
 			return
 		}
