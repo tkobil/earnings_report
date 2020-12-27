@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"math"
+	"strings"
 )
 
 // Security contains metadata about a company's listing
@@ -49,7 +50,7 @@ func (security *Security) isAboveLengthThreshold(threshold int) bool {
 	return security.getLength() > threshold
 }
 
-//SplitByLengthThreshold will split string message into a slice of threshold-length strings
+// SplitByLengthThreshold will split string message into a slice of threshold-length strings
 // Ryan: Changed getMessage to return a map. This function now is reponsible for parsing
 // the map and formatting the tweets into
 func (security *Security) SplitByLengthThreshold(threshold int) []string {
@@ -60,30 +61,35 @@ func (security *Security) SplitByLengthThreshold(threshold int) []string {
 	}
 
 	buffer := threshold - 7 // -7 for the "(1/3): " on top of each msg
+	tweetIdx := 0
+
 	body, link := security.getMessage()
+	words := strings.Split(body, " ")
 	numTweets := int(math.Ceil(float64(security.getLength()) / float64(buffer)))
 	linklen := len(link)
-	//fmt.Printf("\n\n\n\nLINK LENGTH:  %v\n\n\n\n", linklen)
-	stringslice := make([]string, numTweets)
 
-	for i := 0; i < numTweets; i++ {
-		strpt := buffer * i
-		endpt := strpt + buffer
-		if endpt > len(body) {
-			endpt = len(body)
-		}
-		//fmt.Printf("i=%v, strpt=%v, endpt=%v\n", i, strpt, endpt)
+	tweets := make([]string, numTweets)
 
-		if strpt < len(body) {
-			stringslice[i] = fmt.Sprintf("(%d/%d): ", i+1, numTweets) + body[strpt:endpt]
-			if len(stringslice[i])+linklen+2 < buffer { // If we append the link to this tweet's body, will be overrun the buffer?
-				stringslice[i] += "\n\n" + link
-			}
-		} else { // Last tweet is only a link and nothing else
-			stringslice[i] = fmt.Sprintf("(%d/%d): ", i+1, numTweets) + link // We need a link shortener. This makes an assumption that a link will never be more than 293 chars.
+	for _, word := range words {
+		switch true {
+		case len(tweets) == 0:
+			tweets[tweetIdx] = fmt.Sprintf("(%d/%d): ", tweetIdx+1, numTweets) + word
+		case len(tweets[tweetIdx]+" "+word) > buffer:
+			// Time for New Tweet
+			tweetIdx++
+			tweets[tweetIdx] = fmt.Sprintf("(%d/%d): ", tweetIdx+1, numTweets) + word
+		default:
+			tweets[tweetIdx] += " " + word
 		}
 	}
 
-	//fmt.Println("SLICE: ", stringslice)
-	return stringslice
+	// Add Url
+	if len(tweets[tweetIdx])+2+linklen > (buffer) { // 2 for newlines
+		tweets[tweetIdx] += "\n\n" + link
+	} else {
+		tweetIdx++
+		tweets[tweetIdx] = link
+	}
+
+	return tweets
 }
