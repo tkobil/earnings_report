@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"math"
+	"strings"
 )
 
 // Security contains metadata about a company's listing
@@ -20,7 +20,7 @@ func (security *Security) setMessage() {
 	message := fmt.Sprintf("%s (%s) Reporting Earnings Today", security.companyname, security.Ticker)
 	if len(security.latestReportTitle) > 0 {
 		message += fmt.Sprintf(
-			"\n\nLatest News (source: %s): %s\n\n%s", security.latestReportSource, security.latestReportTitle, security.latestURLInfo)
+			"\n\nLatest News (source: %s): %s", security.latestReportSource, security.latestReportTitle)
 	}
 	security._message = message
 }
@@ -35,7 +35,7 @@ func (security *Security) getMessage() string {
 }
 
 func (security *Security) isAboveLengthThreshold(threshold int) bool {
-	return len(security.getMessage()) > threshold
+	return len(security.getMessage())+len(security.latestURLInfo) > threshold
 }
 
 //SplitByLengthThreshold will split string message into a slice of threshold-length strings
@@ -43,15 +43,34 @@ func (security *Security) SplitByLengthThreshold(threshold int) []string {
 	if !security.isAboveLengthThreshold(threshold) {
 		return []string{security.getMessage()}
 	}
-	slicelen := int(math.Ceil(float64(len(security.getMessage())) / float64(threshold-7))) //-7 for the "(1/3): " on top of each msg
-	stringslice := make([]string, slicelen)
-	for i := 0; i < slicelen; i++ {
-		strpt := (threshold - 7) * i
-		endpt := strpt + threshold - 7
-		if endpt > len(security.getMessage()) {
-			endpt = len(security.getMessage())
+
+	var tweets []string
+	tweetIdx := 0
+	words := strings.Split(security._message, " ")
+	for _, word := range words {
+		switch true {
+		case len(tweets) == 0:
+			tweets = append(tweets, word)
+		case len(tweets[tweetIdx]+" "+word) > (threshold - 7):
+			//Time for New Tweet
+			tweets = append(tweets, word)
+			tweetIdx++
+		default:
+			tweets[tweetIdx] += " " + word
 		}
-		stringslice[i] = fmt.Sprintf("(%d/%d): ", i+1, slicelen) + security.getMessage()[strpt:endpt]
 	}
-	return stringslice
+
+	// Add Url
+	if len(tweets[tweetIdx])+2+len(security.latestURLInfo) > (threshold - 7) { //2 for newlines
+		tweets[tweetIdx] += "\n\n" + security.latestURLInfo
+	} else {
+		tweets = append(tweets, security.latestURLInfo)
+		tweetIdx++
+	}
+
+	//Add Tweet Header "(1/3): " Now that we know how many tweets we are sending
+	for idx := range tweets {
+		tweets[idx] = fmt.Sprintf("(%v/%v): ", idx+1, len(tweets)) + tweets[idx]
+	}
+	return tweets
 }
