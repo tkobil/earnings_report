@@ -9,6 +9,8 @@ import (
 	"os"
 	"strings"
 	"sync"
+
+	"github.com/tkobil/earnings_report/utils"
 )
 
 // FetchPolygon fills out security attrs from polygon API
@@ -24,7 +26,7 @@ func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGrou
 	polygonHTTPURL := strings.Join(polygonHTTPURLSlice, "")
 	response, err := http.Get(polygonHTTPURL)
 	if err != nil {
-		fmt.Println(err) //To-Do: Change to logging
+		utils.Logger.Error(err.Error())
 		ch <- secIdx
 		return
 	}
@@ -32,7 +34,7 @@ func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGrou
 	defer response.Body.Close()
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println(err) // To-Do: change to logging
+		utils.Logger.Error(err.Error())
 		ch <- secIdx
 		return
 	}
@@ -42,7 +44,7 @@ func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGrou
 	json.Unmarshal([]byte(responseString), &result)
 	if len(result) <= 0 {
 		fmt.Println(security.Ticker)
-		fmt.Println("No Results") //Change to logging
+		utils.Logger.Warning("No Polygon Results Found for " + security.Ticker)
 		ch <- secIdx
 		return
 	}
@@ -50,7 +52,7 @@ func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGrou
 	latestResult := result[0]
 	security.latestReportTimestamp = fmt.Sprint(latestResult["timestamp"])
 	security.latestReportTitle = fmt.Sprint(latestResult["title"])
-	security.latestReportURL = fmt.Sprint(latestResult["url"])
+	security.latestURLInfo = fmt.Sprintf("Latest Report: %s", latestResult["url"])
 	security.latestReportSource = fmt.Sprint(latestResult["source"])
 	ch <- secIdx
 	return

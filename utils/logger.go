@@ -16,15 +16,15 @@ type logger struct {
 var Logger logger
 
 func (logstruct *logger) Info(logmsg string) {
-	fmt.Printf("INFO: %v | USER: %v", logmsg, logstruct.user)
+	fmt.Printf("INFO: %v | USER: %v\n", logmsg, logstruct.user)
 }
 
 func (logstruct *logger) Warning(logmsg string) {
-	fmt.Printf("WARNING: %v | USER: %v", logmsg, logstruct.user)
+	fmt.Printf("WARNING: %v | USER: %v\n", logmsg, logstruct.user)
 }
 
 func (logstruct *logger) Error(logmsg string) {
-	fmt.Printf("ERROR: %v | USER: %v", logmsg, logstruct.user)
+	fmt.Printf("ERROR: %v | USER: %v\n", logmsg, logstruct.user)
 }
 
 func init() {
