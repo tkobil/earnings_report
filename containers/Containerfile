@@ -1,0 +1,3 @@
+FROM docker.io/library/debian
+
+ADD runearningsreport /home/
