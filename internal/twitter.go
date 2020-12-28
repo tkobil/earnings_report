@@ -3,10 +3,12 @@ package internal
 import (
 	"fmt"
 	"log"
+	"net/http/httputil"
 	"os"
 
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
+	"github.com/tkobil/earnings_report/utils"
 )
 
 func getEnvVar(environVarKey string) string {
@@ -58,9 +60,15 @@ func SendTweets(tweets []string) {
 		fmt.Printf("TWEETING %v", tweet)
 		tweet, resp, err := client.Statuses.Update(tweet, nil)
 		if err != nil {
-			log.Println(err)
+			utils.Logger.Error(err.Error())
 		}
-		log.Printf("%+v\n", resp)
-		log.Printf("%+v\n", tweet)
+		resp.Body.Close()
+		bytes, err := httputil.DumpResponse(resp, true)
+		if err != nil {
+			utils.Logger.Error("error converting http twitter response body to string")
+		}
+		utils.Logger.Info("Twitter Response: " + string(bytes))
+		utils.Logger.Info("Tweet: " + tweet.FullText)
+		resp.Body.Close()
 	}
 }

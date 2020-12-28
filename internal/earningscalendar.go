@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"github.com/tkobil/earnings_report/utils"
 )
 
 //var basecalendar string = "https://finance.yahoo.com/calendar/earnings/" //Generates today's calendar
@@ -29,7 +31,7 @@ func GetTodaysReporters() []Security {
 	var securities []Security // initialize return
 	response, err := http.Get(basecalendar)
 	if err != nil {
-		fmt.Println(err) // To-Do: change to logging
+		utils.Logger.Error(err.Error())
 		return securities
 	}
 
@@ -38,7 +40,7 @@ func GetTodaysReporters() []Security {
 
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println(err) // To-Do: change to logging
+		utils.Logger.Error(err.Error())
 		return securities
 	}
 

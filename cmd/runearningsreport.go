@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/tkobil/earnings_report/internal"
+	"github.com/tkobil/earnings_report/utils"
 )
 
 var apiCallDelay time.Duration = 12
@@ -14,6 +15,7 @@ func gatherSecurityInfo(securities []internal.Security, ch chan int) {
 
 	for secIdx := range securities {
 		wg.Add(1)
+		utils.Logger.Info("Fetching Polygon for " + securities[secIdx].Ticker)
 		go internal.FetchPolygon(&securities[secIdx], secIdx, ch, &wg)
 		time.Sleep(apiCallDelay * time.Second)
 	}
@@ -23,6 +25,7 @@ func gatherSecurityInfo(securities []internal.Security, ch chan int) {
 }
 
 func main() {
+	utils.Logger.Info("Starting Application...")
 	ch := make(chan int)
 	securities := internal.GetTodaysReporters()
 	go gatherSecurityInfo(securities, ch)
