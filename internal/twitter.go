@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http/httputil"
 	"os"
-	"runtime"
 
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
@@ -66,7 +65,6 @@ func SendTweets(tweets []string) {
 		resp.Body.Close()
 		bytes, err := httputil.DumpResponse(resp, true)
 		if err != nil {
-			runtime.Breakpoint()
 			utils.Logger.Error("error converting http twitter response body to string")
 		}
 		utils.Logger.Info("Twitter Response: " + string(bytes))
