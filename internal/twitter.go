@@ -72,7 +72,5 @@ func SendTweets(tweets []string) {
 		utils.Logger.Info("Twitter Response: " + string(bytes))
 		utils.Logger.Info("Tweet: " + tweet.FullText)
 		resp.Body.Close()
-		// log.Printf("%+v\n", resp)
-		// log.Printf("%+v\n", tweet)
 	}
 }
