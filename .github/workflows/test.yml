@@ -1,7 +1,5 @@
 on: [push, pull_request]
 name: Test
-env:
-  GO
 jobs:
   test:
     strategy:
@@ -17,4 +15,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Lint
+      uses: Jerome1337/gofmt-action@v1.0.4
+      with:
+        gofmt-path: './src/'
+        gofmt-flags: '-l -d'
       run: gofmt -l -d .
