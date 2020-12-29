@@ -1,5 +1,0 @@
-FROM docker.io/library/debian
-
-ADD runearningsreport /home/
-EXPOSE 80 443
-
