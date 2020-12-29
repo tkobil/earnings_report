@@ -46,7 +46,10 @@ func GetTodaysReporters() []Security {
 
 	responseString := string(responseData)
 	getJSONResponse(responseString)
-	json.Unmarshal([]byte(getJSONResponse(responseString)), &result)
+	err = json.Unmarshal([]byte(getJSONResponse(responseString)), &result)
+	if err != nil {
+		utils.Logger.Error(err.Error())
+	}
 	rows := result["context"].(map[string]interface{})["dispatcher"].(map[string]interface{})["stores"].(map[string]interface{})["ScreenerResultsStore"].(map[string]interface{})["results"].(map[string]interface{})["rows"] //deep get from JSON
 	rowslist := rows.([]interface{})
 
