@@ -19,4 +19,3 @@ jobs:
       with:
         gofmt-path: './src/'
         gofmt-flags: '-l -d'
-      run: gofmt -l -d .
