@@ -41,7 +41,10 @@ func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGrou
 
 	var result []map[string]interface{}
 	responseString := string(responseData)
-	json.Unmarshal([]byte(responseString), &result)
+	err = json.Unmarshal([]byte(responseString), &result)
+	if err != nil {
+		utils.Logger.Error(err.Error())
+	}
 	if len(result) <= 0 {
 		fmt.Println(security.Ticker)
 		utils.Logger.Warning("No Polygon Results Found for " + security.Ticker)
@@ -55,5 +58,4 @@ func FetchPolygon(security *Security, secIdx int, ch chan int, wg *sync.WaitGrou
 	security.latestURLInfo = fmt.Sprintf("Latest Report: %s", latestResult["url"])
 	security.latestReportSource = fmt.Sprint(latestResult["source"])
 	ch <- secIdx
-	return
 }
