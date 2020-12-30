@@ -45,7 +45,7 @@ func getClient() *twitter.Client {
 		log.Fatal(err) //Change to logging
 	}
 
-	log.Printf("User's ACCOUNT:\n%+v\n", user)
+	utils.Logger.Info("User account: " + user.Name)
 	return client
 }
 
