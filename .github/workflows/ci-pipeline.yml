@@ -5,6 +5,7 @@ on:
       - main
   pull_request:
 jobs:
+
   lint:
     name: lint
     strategy:
@@ -18,8 +19,9 @@ jobs:
         with:
           # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
           version: v1.29
+
   compile-arm: 
-    name: compile-arm
+    name: Compile for arm architecture
     env:
       OSTARGET: "linux"
       ARCHTARGET: "arm"
@@ -44,8 +46,9 @@ jobs:
         with:
           name: earningsbot-linux-arm
           path: earningsbot
+
   compile-macOS: 
-    name: compile-macOS
+    name: Compile for macOS architecture
     env:
       OSTARGET: "darwin"
       ARCHTARGET: "amd64"
@@ -70,4 +73,30 @@ jobs:
         with:
           name: earningsbot-darwin-amd64
           path: earningsbot
-      
+
+  build-image:
+    name: Build container image
+    runs-on: ubuntu-latest
+    # This can't be run without first linting and compiling the code
+    needs: [lint, compile-arm]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Download compiled binary
+      uses: actions/download-artifact@v2
+      with:
+        name: earningsbot-linux-arm
+    - name: Use Dockerfile to build
+      uses: redhat-actions/buildah-build@v1
+      with:
+        image: earningsbot-arm
+        tag: latest
+        dockerfiles: |
+          ./Dockerfile
+    #- name: Push to Dockerhub
+    #  uses: redhat-actions/push-to-registry@v1
+    #  with:
+    #    image: ${{ env.IMAGE_NAME }}
+    #    tag: ${{ env.TAG }}
+    #    registry: ${{ secrets.QUAY_REPO }}
+    #    username: ${{ secrets.QUAY_USERNAME }}
+    #    password: ${{ secrets.QUAY_TOKEN }}
