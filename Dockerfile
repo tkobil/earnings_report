@@ -6,7 +6,7 @@ FROM docker.io/library/debian:buster-slim
 RUN apt-get update && apt-get install -y ca-certificates
 
 WORKDIR /root/
-COPY ./bin/earningsbot .
+COPY ./earningsbot .
 
 # Expose metadata to explain that these ports are used by the application
 EXPOSE 80 443
