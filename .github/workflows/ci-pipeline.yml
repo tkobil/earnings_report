@@ -88,15 +88,15 @@ jobs:
     - name: Use Dockerfile to build
       uses: redhat-actions/buildah-build@v1
       with:
-        image: earningsbot-arm
-        tag: latest
+        image: earningsbot
+        tag: arm-latest
         dockerfiles: |
           ./Dockerfile
-    #- name: Push to Dockerhub
-    #  uses: redhat-actions/push-to-registry@v1
-    #  with:
-    #    image: ${{ env.IMAGE_NAME }}
-    #    tag: ${{ env.TAG }}
-    #    registry: ${{ secrets.QUAY_REPO }}
-    #    username: ${{ secrets.QUAY_USERNAME }}
-    #    password: ${{ secrets.QUAY_TOKEN }}
+    - name: Push to Dockerhub
+      uses: redhat-actions/push-to-registry@v1
+      with:
+        image: earningsbot
+        tag: arm-latest
+        registry: ${{ secrets.DOCKERHUB_USER }}
+        username: ${{ secrets.DOCKERHUB_USER }}
+        password: ${{ secrets.DOCKERHUB_PASS }}
