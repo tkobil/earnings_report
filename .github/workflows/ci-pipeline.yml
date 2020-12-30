@@ -93,6 +93,8 @@ jobs:
         oci: true
         dockerfiles: |
           ./Dockerfile
+        build-args: |
+          platform=linux/arm
     - name: Push to Dockerhub
       uses: redhat-actions/push-to-registry@v1
       with:
