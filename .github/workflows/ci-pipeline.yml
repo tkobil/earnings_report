@@ -4,17 +4,11 @@ on:
     branches:
       - main
   pull_request:
-env:
-  GODEFAULT: "1.15.6"
-  # For this specific project we are only building for this architecture
 jobs:
   lint:
     name: lint
     strategy:
       matrix:
-        # This is structured so that we always build to the env var version.
-        # If you wish to build other versions, add them to this array in each job.
-        go-version: [$GODEFAULT]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -31,7 +25,8 @@ jobs:
       ARCHTARGET: "arm"
     strategy:
       matrix:
-        go-version: [$GODEFAULT]
+        # If we want to build with more versions we can add them here
+        go-version: [1.15.6]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
