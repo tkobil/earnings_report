@@ -82,7 +82,7 @@ jobs:
     env:
       roottag: fromJSON('["downstream", "upstream"]')[contains(github.repository_owner, 'tkobil')]
       arch: arm-v1.0
-      tag: ${{ env.roottag }}-${{ env.arch }}
+      tag: ${{ roottag }}-${{ arch }}
     steps:
     - uses: actions/checkout@v2
     - name: Download compiled binary
