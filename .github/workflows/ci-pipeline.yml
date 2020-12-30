@@ -79,6 +79,8 @@ jobs:
     runs-on: ubuntu-latest
     # This can't be run without first linting and compiling the code
     needs: [lint, compile-arm]
+    env:
+      tag: arm-latest
     steps:
     - uses: actions/checkout@v2
     - name: Download compiled binary
@@ -102,4 +104,4 @@ jobs:
         platforms: linux/arm/v7 # Can add more platforms here
         push: true
         tags: |
-          ${{ secrets.DOCKERHUB_USER }}/earningsbot:latest
+          ${{ secrets.DOCKERHUB_USER }}/earningsbot:${{ env.tag }}
