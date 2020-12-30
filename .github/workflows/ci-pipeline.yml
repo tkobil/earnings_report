@@ -95,7 +95,7 @@ jobs:
     - name: Push to Dockerhub
       uses: redhat-actions/push-to-registry@v1
       with:
-        image: earningsbot-debian
+        image: earningsbot-arm
         tag: latest
         registry: ${{ secrets.DOCKERHUB_REPO }}
         username: ${{ secrets.DOCKERHUB_USER }}
