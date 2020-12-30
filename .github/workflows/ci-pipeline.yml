@@ -4,13 +4,18 @@ on:
     branches:
       - main
   pull_request:
+env:
+  GODEFAULT: "1.15.6"
+  # For this specific project we are only building for this architecture
 jobs:
-  golangci:
+  lint:
+    name: lint
     strategy:
       matrix:
-        go-version: [1.15.x]
-        os: ubuntu-latest
-    name: lint
+        # This is structured so that we always build to the env var version.
+        # If you wish to build other versions, add them to this array in each job.
+        go-version: [$GODEFAULT]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -19,3 +24,29 @@ jobs:
         with:
           # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
           version: v1.29
+  compile-arm: 
+    name: compile-arm
+    env:
+      OSTARGET: "linux"
+      ARCHTARGET: "arm"
+    strategy:
+      matrix:
+        go-version: [$GODEFAULT]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go environment
+        uses: actions/setup-go@v2
+        with:
+          # The Go version to download (if necessary) and use. Supports semver spec and ranges.
+          go-version: ${{ matrix.go-version }}
+        # This builds to the architecture specified in the job env vars
+      - name: Run go build
+        run: GOOS=$OSTARGET GOARCH=$ARCHTARGET go build -o earningsbot cmd/runearningsreport.go
+      - name: Upload build binary artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: bot-binary
+          path: earningsbot
+      
