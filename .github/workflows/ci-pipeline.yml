@@ -80,7 +80,7 @@ jobs:
     # This can't be run without first linting and compiling the code
     needs: [lint, compile-arm]
     env:
-      roottag: fromJSON('["downstream", "upstream"]')[contains(github.repository_owner, 'tkobil')]
+      roottag: ${{ fromJSON('["downstream", "upstream"]')[contains(github.repository_owner, 'tkobil')] }}
       arch: arm-v1.0
     steps:
     - uses: actions/checkout@v2
