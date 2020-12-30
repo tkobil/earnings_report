@@ -89,7 +89,7 @@ jobs:
       uses: redhat-actions/buildah-build@v1
       with:
         image: earningsbot
-        tag: latest
+        tag: arm-latest
         dockerfiles: |
           ./Dockerfile
     - name: Push to Dockerhub
