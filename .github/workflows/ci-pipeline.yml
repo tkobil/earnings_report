@@ -80,7 +80,7 @@ jobs:
     # This can't be run without first linting and compiling the code
     needs: [lint, compile-arm]
     env:
-      tag: arm-v1.0
+      basetag: arm-v1.0
     steps:
     - uses: actions/checkout@v2
     - name: Download compiled binary
@@ -96,6 +96,14 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USER }}
         password: ${{ secrets.DOCKERHUB_PASS }}
+    - name: Set Upstream tag
+      env:
+        tag: upstream-${{ env.basetag }}
+      if: ${{ github.repository_owner == tkobil }}
+    - name: Set Downstream tag
+      env:
+        tag: downstream-${{ env.basetag }}
+      if: ${{ github.repository_owner == tkobil }}
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
