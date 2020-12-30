@@ -86,7 +86,8 @@ jobs:
       with:
         name: earningsbot-linux-arm
     - name: Use Dockerfile to build
-      run: buildah bud -f Dockerfile --format oci -t earningsbot:arm-latest --platform=linux/arm .
+      #run: buildah bud -f Dockerfile --format oci -t earningsbot:arm-latest --platform=linux/arm .
+      run: buildah bud -f Dockerfile --format oci -t earningsbot:arm-latest --build-arg BASE_IMAGE=arm32v7/debian .
     - name: Push to Dockerhub
       uses: redhat-actions/push-to-registry@v1
       with:
