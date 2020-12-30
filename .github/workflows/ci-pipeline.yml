@@ -80,7 +80,9 @@ jobs:
     # This can't be run without first linting and compiling the code
     needs: [lint, compile-arm]
     env:
-      basetag: arm-v1.0
+      roottag: fromJSON('["downstream", "upstream"]')[contains(github.repository_owner, 'tkobil')]
+      arch: arm-v1.0
+      tag: ${{ env.roottag }}-${{ env.arch }}
     steps:
     - uses: actions/checkout@v2
     - name: Download compiled binary
