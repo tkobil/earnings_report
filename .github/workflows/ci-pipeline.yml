@@ -1,0 +1,73 @@
+name: ci-pipeline
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  lint:
+    name: lint
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
+          version: v1.29
+  compile-arm: 
+    name: compile-arm
+    env:
+      OSTARGET: "linux"
+      ARCHTARGET: "arm"
+    strategy:
+      matrix:
+        # If we want to build with more versions we can add them here
+        go-version: [1.15.6]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go environment
+        uses: actions/setup-go@v2
+        with:
+          # The Go version to download (if necessary) and use. Supports semver spec and ranges.
+          go-version: ${{ matrix.go-version }}
+        # This builds to the architecture specified in the job env vars
+      - name: Run go build
+        run: GOOS=$OSTARGET GOARCH=$ARCHTARGET go build -o earningsbot cmd/runearningsreport.go
+      - name: Upload build binary artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: earningsbot-linux-arm
+          path: earningsbot
+  compile-macOS: 
+    name: compile-macOS
+    env:
+      OSTARGET: "darwin"
+      ARCHTARGET: "amd64"
+    strategy:
+      matrix:
+        # If we want to build with more versions we can add them here
+        go-version: [1.15.6]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go environment
+        uses: actions/setup-go@v2
+        with:
+          # The Go version to download (if necessary) and use. Supports semver spec and ranges.
+          go-version: ${{ matrix.go-version }}
+        # This builds to the architecture specified in the job env vars
+      - name: Run go build
+        run: GOOS=$OSTARGET GOARCH=$ARCHTARGET go build -o earningsbot cmd/runearningsreport.go
+      - name: Upload build binary artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: earningsbot-darwin-amd64
+          path: earningsbot
+      
