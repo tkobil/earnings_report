@@ -92,11 +92,11 @@ jobs:
         tag: latest
         dockerfiles: |
           ./Dockerfile
-    #- name: Push to Dockerhub
-    #  uses: redhat-actions/push-to-registry@v1
-    #  with:
-    #    image: ${{ env.IMAGE_NAME }}
-    #    tag: ${{ env.TAG }}
-    #    registry: ${{ secrets.QUAY_REPO }}
-    #    username: ${{ secrets.QUAY_USERNAME }}
-    #    password: ${{ secrets.QUAY_TOKEN }}
+    - name: Push to Dockerhub
+      uses: redhat-actions/push-to-registry@v1
+      with:
+        image: earningsbot-debian
+        tag: latest
+        registry: ${{ secrets.DOCKERHUB_REPO }}
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
