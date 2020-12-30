@@ -90,6 +90,7 @@ jobs:
       with:
         image: earningsbot
         tag: arm-latest
+        oci: true
         dockerfiles: |
           ./Dockerfile
     - name: Push to Dockerhub
