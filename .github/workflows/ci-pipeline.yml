@@ -99,10 +99,12 @@ jobs:
     - name: Set Upstream tag
       env:
         tag: upstream-${{ env.basetag }}
+      run: echo ${{ env.tag }}
       if: ${{ github.repository_owner == tkobil }}
     - name: Set Downstream tag
       env:
         tag: downstream-${{ env.basetag }}
+      run: echo ${{ env.tag }}
       if: ${{ github.repository_owner == tkobil }}
     - name: Build and push
       uses: docker/build-push-action@v2
