@@ -1,4 +1,0 @@
-#! /usr/bin/env bash
-  
-podman rm twitterbot
-podman run -it -p 8080:8080 -p 8443:8443 --env-file env-vars.secret --name twitterbot twitterbot:latest 
