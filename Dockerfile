@@ -1,4 +1,4 @@
-FROM docker.io/library/debian:buster-slim
+FROM docker.io/library/debian
 
 # Since we issue http(s) requests, we need to install
 # certificate authority certificates from the
