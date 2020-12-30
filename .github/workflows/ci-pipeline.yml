@@ -100,12 +100,12 @@ jobs:
       env:
         tag: upstream-${{ env.basetag }}
       run: echo ${{ env.tag }}
-      if: ${{ contains( github.repository_owner, "tkobil" ) }}
+      if: ${{ contains(github.repository_owner, 'tkobil') }}
     - name: Set Downstream tag
       env:
         tag: downstream-${{ env.basetag }}
       run: echo ${{ env.tag }}
-      if: ${{ contains( github.repository_owner, "RyanDevlin" ) }}
+      if: ${{ contains(github.repository_owner, 'RyanDevlin') }}
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
